@@ -16,12 +16,15 @@ const passwords = {
 app.get('/get-passwords', (_, res) => res.send(passwords))
 
 app.post('/create-password', function (req, res) {
-    const site = req.body.site
-    const password = req.body.password
-    passwords[site] = password
+    const body = req.body
+    const [site, password] = [body.site, body.password]
 
-    res.status(200)
-    res.end()
+    if (site in passwords) {
+        res.sendStatus(500)
+    }
+
+    passwords[site] = password
+    res.sendStatus(200)
 })
 
 app.put('/change-password', (req, res) => {
